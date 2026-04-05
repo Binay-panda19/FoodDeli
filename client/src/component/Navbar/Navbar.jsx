@@ -2,12 +2,23 @@ import React, { useContext, useState } from "react";
 import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { StoreContext } from "../../Context/StoreContext";
+import { StoreContext } from "../../context/StoreContext";
+import API from "../../api/axios";
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = ({ setShowLogin, user, setUser }) => {
   const [menu, setMenu] = useState("home");
 
   const { getTotalCartAmount } = useContext(StoreContext);
+
+  // 🔐 Logout handler
+  const handleLogout = async () => {
+    try {
+      await API.post("/auth/logout");
+      setUser(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="navbar">
@@ -48,13 +59,23 @@ const Navbar = ({ setShowLogin }) => {
 
       <div className="navbar-right">
         <img src={assets.search_icon} alt="search" />
+
         <div className="navbar-search-icon">
           <Link to="/cart">
             <img src={assets.basket_icon} alt="basket" />
           </Link>
           <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
         </div>
-        <button onClick={() => setShowLogin(true)}>Sign In</button>
+
+        {/* 🔥 AUTH UI */}
+        {!user ? (
+          <button onClick={() => setShowLogin(true)}>Sign In</button>
+        ) : (
+          <div className="navbar-user">
+            <p>{user.name}</p>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
       </div>
     </div>
   );

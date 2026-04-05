@@ -18,7 +18,14 @@ export const registerUser = async (req, res) => {
     }
 
     // Create user
-    const user = await User.create({ name, email, password, phone, address });
+    const user = await User.create({
+      name,
+      email,
+      password,
+      address,
+      phone,
+      role: "customer", // ✅ FORCE ROLE
+    });
 
     // Generate token & set cookie
     generateToken(res, user._id);

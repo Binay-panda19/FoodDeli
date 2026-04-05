@@ -4,13 +4,21 @@ import cookieParser from "cookie-parser";
 
 // Route imports
 import authRoutes from "./routes/authRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 const app = express();
 
 // ── Core Middleware ──────────────────────────────────────
-app.use(cors({ origin: true, credentials: true }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
 app.use(cookieParser());
 
 // ── Health Check ─────────────────────────────────────────
@@ -20,6 +28,7 @@ app.get("/", (req, res) => {
 
 // ── API Routes ───────────────────────────────────────────
 app.use("/api/auth", authRoutes);
+app.use("/api/cart", cartRoutes);
 
 // ── 404 Handler ──────────────────────────────────────────
 app.use((req, res) => {
