@@ -9,9 +9,8 @@ const restaurantSchema = new mongoose.Schema(
       maxlength: [100, "Restaurant name cannot exceed 100 characters"],
     },
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Owner is required"],
+      type: String,
+      default: "User",
     },
     description: {
       type: String,
@@ -46,7 +45,7 @@ const restaurantSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // ── Indexes ──────────────────────────────────────────────

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 // Route imports
 import authRoutes from "./routes/authRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import foodRoutes from "./routes/foodRoutes.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 // ── API Routes ───────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/food", foodRoutes);
 
 // ── 404 Handler ──────────────────────────────────────────
 app.use((req, res) => {
