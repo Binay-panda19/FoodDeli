@@ -20,16 +20,22 @@ export const getCart = async (req, res) => {
 
 // ✅ Add item to cart
 export const addToCart = async (req, res) => {
-  const { foodId, quantity } = req.body;
+  const { name, quantity } = req.body;
 
   try {
-    // 🔥 Validate foodId
-    const food = await FoodItem.findById(foodId);
+    // ✅ Validate input
+    if (!name || quantity <= 0) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+
+    // 🔍 Find food by name (single item)
+    const food = await FoodItem.findOne({ name: name });
 
     if (!food) {
       return res.status(404).json({ message: "Food not found" });
     }
 
+    // 🛒 Find or create cart
     let cart = await Cart.findOne({ user: req.user._id });
 
     if (!cart) {
@@ -40,28 +46,34 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    const itemIndex = cart.items.findIndex(
-      (item) => item.food.toString() === foodId,
-    );
+    // 🔁 Check if item already exists (compare by name)
+    const itemIndex = cart.items.findIndex((item) => item.name === name);
 
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
       cart.items.push({
-        food: foodId,
+        name: food.name, // store name
         quantity,
-        price: food.price, // ✅ FIX HERE
+        price: food.price,
       });
     }
 
-    // 🔥 Recalculate total
-    cart.calcTotalPrice();
+    // 💰 Recalculate total
+    cart.totalPrice = cart.items.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0,
+    );
 
     await cart.save();
 
-    res.json(cart);
+    res.status(200).json({
+      success: true,
+      message: "Item added to cart",
+      cart,
+    });
   } catch (error) {
-    console.log(error); // 🔍 debug
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

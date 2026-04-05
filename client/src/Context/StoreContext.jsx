@@ -34,16 +34,16 @@ const StoreContextProvider = ({ children }) => {
   }, []);
 
   // ➕ Add to cart (backend + state)
-  const addToCart = async (itemId) => {
+  const addToCart = async (name) => {
     try {
-      await apiAddToCart(itemId, 1);
+      await apiAddToCart(name, 1);
 
       setCartItems((prev) => ({
         ...prev,
-        [itemId]: prev[itemId] ? prev[itemId] + 1 : 1,
+        [food._id]: prev[food._id] ? prev[food._id] + 1 : 1,
       }));
     } catch (err) {
-      console.log("Add error:", err);
+      console.log("Add error:", err.message);
     }
   };
 
