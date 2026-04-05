@@ -1,0 +1,121 @@
+.place-order {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* LEFT SIDE */
+.place-order-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.place-order-left .title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.place-order-left input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.place-order-left input:focus {
+  border-color: #333;
+}
+
+/* MULTI FIELDS */
+.multi-fields {
+  display: flex;
+  gap: 15px;
+}
+
+/* RIGHT SIDE */
+.place-order-right {
+  flex: 0.8;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  height: fit-content;
+}
+
+.cart-total h2 {
+  margin-bottom: 15px;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* BUTTON */
+.place-order-right button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover effect */
+.place-order-right button:hover {
+  background: #333;
+  transform: scale(1.02);
+}
+
+/* Click effect */
+.place-order-right button:active {
+  transform: scale(0.97);
+  background: #111;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .place-order {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .place-order-right {
+    width: 100%;
+  }
+
+  .multi-fields {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 500px) {
+  .place-order {
+    padding: 15px;
+  }
+
+  .place-order-left input {
+    font-size: 14px;
+  }
+
+  .place-order-right button {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

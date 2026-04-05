@@ -1,0 +1,48 @@
+import React, { useState } from "react";
+import "./LoginPopup.css";
+import { assets } from "../../assets/assets";
+
+function LoginPopup({ setShowLogin }) {
+  const [currState, setCurrState] = useState("Login");
+
+  return (
+    <div className="login-popup">
+      <form className="login-popup-container">
+        <div className="login-popup-title">
+          <h2>{currState}</h2>
+          <img
+            onClick={() => setShowLogin(false)}
+            src={assets.cross_icon}
+            alt="close"
+          />
+        </div>
+
+        <div className="login-popup-inputs">
+          {currState !== "Login" && (
+            <input type="text" placeholder="Your name" required />
+          )}
+
+          <input type="email" placeholder="Your email" required />
+          <input type="password" placeholder="Your password" required />
+        </div>
+
+        <button>{currState === "Sign Up" ? "Create account" : "Login"}</button>
+
+        <p>
+          {currState === "Login"
+            ? "Don't have an account?"
+            : "Already have an account?"}
+          <span
+            onClick={() =>
+              setCurrState(currState === "Login" ? "Sign Up" : "Login")
+            }
+          >
+            {currState === "Login" ? " Sign Up" : " Login"}
+          </span>
+        </p>
+      </form>
+    </div>
+  );
+}
+
+export default LoginPopup;

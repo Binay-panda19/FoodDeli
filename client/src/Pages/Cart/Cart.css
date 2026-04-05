@@ -1,0 +1,222 @@
+/* Main Cart Container */
+.cart {
+  padding: 30px 6%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Items Section */
+.cart-items {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Row */
+.cart-items-title {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  font-weight: bold;
+  color: #333;
+  padding: 10px 0;
+}
+
+/* Each Row */
+.cart-items-item {
+  font-weight: 400;
+  padding: 15px 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.cart-items-item:last-child {
+  border-bottom: none;
+}
+
+/* Product Image */
+.cart-items-item img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Remove Button */
+.remove {
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.remove:hover {
+  color: #ff5b5b;
+}
+
+/* Bottom Section (Total + Promo) */
+.cart-bottom {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Total Box */
+.cart-total {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.cart-total h2 {
+  margin-bottom: 15px;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.cart-bottom button {
+  padding: 14px 22px;
+  background: #ff7b00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(255, 123, 0, 0.4);
+  transition: 0.3s;
+}
+
+.cart-bottom button:hover {
+  background: #ff8f26;
+}
+
+/* Promo Code Section */
+.cart-promocode {
+  width: 100%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.cart-promocode-input {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.cart-promocode-input input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.cart-promocode-input button {
+  padding: 12px 20px;
+  background: #ff7b00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-promocode-input button:hover {
+  background: #ff8f26;
+}
+
+/* ----------------------- */
+/* RESPONSIVE DESIGN */
+/* ----------------------- */
+
+@media (max-width: 1024px) {
+  .cart-items-title {
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-items-title {
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    font-size: 14px;
+  }
+
+  .cart-items-item {
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+  }
+
+  .cart-items-title p:nth-child(5),
+  .cart-items-title p:nth-child(6),
+  .cart-items-item p:nth-child(5),
+  .cart-items-item p:nth-child(6) {
+    display: none; /* hide total and remove on small screens */
+  }
+
+  .cart-items-item img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart {
+    padding: 20px;
+  }
+
+  .cart-items-title {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cart-items-item {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cart-bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-total {
+    width: 100%;
+  }
+}
+/* Black Submit Button With Hover & Click Effect */
+.cart-promocode-input button {
+  padding: 12px 20px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Hover – Slight Glow + Lift */
+.cart-promocode-input button:hover {
+  background: #222;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* Active (Click) – Press Animation */
+.cart-promocode-input button:active {
+  transform: scale(0.96);
+  background: #111;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
