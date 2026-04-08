@@ -8,7 +8,7 @@ function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await API.get("/orders");
+      const res = await API.get("/orders/get");
       setOrders(res.data);
     } catch (err) {
       toast.error("Failed to load orders");
@@ -32,7 +32,6 @@ function Orders() {
   return (
     <div className="orders-container">
       <h2>Orders</h2>
-
       <table className="orders-table">
         <thead>
           <tr>
@@ -44,30 +43,38 @@ function Orders() {
         </thead>
 
         <tbody>
-          {orders.map((order) => (
-            <tr key={order._id}>
-              <td>{order._id.slice(-6)}</td>
+          {orders.length > 0 &&
+            orders.map((order) => (
+              <tr key={order._id}>
+                <td>{order._id.slice(-6)}</td>
 
-              <td>₹{order.totalAmount}</td>
+                <td>₹{order.totalAmount}</td>
 
-              <td>{order.status}</td>
+                <td>{order.status}</td>
 
-              <td>
-                <select
-                  value={order.status}
-                  onChange={(e) => updateStatus(order._id, e.target.value)}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="preparing">Preparing</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-              </td>
-            </tr>
-          ))}
+                <td>
+                  <select
+                    value={order.status}
+                    onChange={(e) => updateStatus(order._id, e.target.value)}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
+      <br></br>
+      <br></br>
+      {orders.length == 0 && (
+        <h3>
+          <b>No orders yet.</b>
+        </h3>
+      )}
     </div>
   );
 }
