@@ -6,42 +6,30 @@ import User from "../models/User.js";
  * Reads JWT from cookies, verifies it, and attaches user to req.user.
  */
 export const protect = async (req, res, next) => {
-  try {
-    const token = req.cookies?.token;
+  console.log("COOKIES:", req.cookies);
 
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized — no token provided",
-      });
-    }
+  const token = req.cookies?.token;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findById(decoded.id).select("-password");
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized — user not found",
-      });
-    }
-
-    if (!user.isActive) {
-      return res.status(403).json({
-        success: false,
-        message: "Account has been deactivated",
-      });
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
+  if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Not authorized — invalid token",
+      message: "No token found",
     });
   }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  console.log("DECODED:", decoded);
+
+  const user = await User.findById(decoded.id).select("-password");
+
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: "User not found for this token",
+    });
+  }
+  req.user = user;
+  next();
 };
 
 /**

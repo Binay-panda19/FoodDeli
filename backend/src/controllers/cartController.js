@@ -4,32 +4,49 @@ import FoodItem from "../models/FoodItem.js";
 // ✅ Get user cart
 export const getCart = async (req, res) => {
   try {
+    console.log("USER FROM PROTECT:", req.user);
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated",
+      });
+    }
+
     const cart = await Cart.findOne({ user: req.user._id }).populate(
       "items.food",
     );
 
     if (!cart) {
-      return res.json({ items: [], totalPrice: 0 });
+      return res.json({
+        items: [],
+        totalPrice: 0,
+      });
     }
 
     res.json(cart);
   } catch (error) {
+    console.error("GET CART ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
 // ✅ Add item to cart
 export const addToCart = async (req, res) => {
-  const { name, quantity } = req.body;
+  console.log(req.body);
+  const { foodId, quantity } = req.body;
+
+  console.log("USER:", req.user);
+  console.log("BODY:", req.body);
 
   try {
-    // ✅ Validate input
-    if (!name || quantity <= 0) {
+    if (!foodId || quantity <= 0) {
       return res.status(400).json({ message: "Invalid input" });
     }
 
-    // 🔍 Find food by name (single item)
-    const food = await FoodItem.findOne({ name: name });
+    // 🔍 Find food by id
+    // const food = await FoodItem.findById(foodId);
+    const food = await FoodItem.findOne({ name: req.body.name });
 
     if (!food) {
       return res.status(404).json({ message: "Food not found" });
@@ -42,28 +59,26 @@ export const addToCart = async (req, res) => {
       cart = new Cart({
         user: req.user._id,
         items: [],
-        totalPrice: 0,
       });
     }
 
-    // 🔁 Check if item already exists (compare by name)
-    const itemIndex = cart.items.findIndex((item) => item.name === name);
+    // 🔁 Check if item already exists
+    const itemIndex = cart.items.findIndex(
+      (item) => item.food.toString() === foodId,
+    );
 
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
       cart.items.push({
-        name: food.name, // store name
+        food: food._id,
         quantity,
         price: food.price,
       });
     }
 
     // 💰 Recalculate total
-    cart.totalPrice = cart.items.reduce(
-      (total, item) => total + item.quantity * item.price,
-      0,
-    );
+    cart.calcTotalPrice();
 
     await cart.save();
 

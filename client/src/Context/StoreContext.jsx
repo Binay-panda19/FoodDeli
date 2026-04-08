@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { food_list } from "../assets/assets";
+import API from "../api/axios";
 import {
   addToCart as apiAddToCart,
   removeFromCart as apiRemoveFromCart,
@@ -10,6 +10,16 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
+  const [food_list, setFoodList] = useState([]);
+
+  const fetchFoods = async () => {
+    try {
+      const res = await API.get("/foods");
+      setFoodList(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // 🔄 Fetch cart from backend
   const fetchCart = async () => {
@@ -30,17 +40,18 @@ const StoreContextProvider = ({ children }) => {
 
   // 🚀 Load cart on start
   useEffect(() => {
+    fetchFoods();
     fetchCart();
   }, []);
 
   // ➕ Add to cart (backend + state)
-  const addToCart = async (name) => {
+  const addToCart = async (foodId) => {
     try {
-      await apiAddToCart(name, 1);
+      await apiAddToCart(foodId, 1);
 
       setCartItems((prev) => ({
         ...prev,
-        [food._id]: prev[food._id] ? prev[food._id] + 1 : 1,
+        [foodId]: prev[foodId] ? prev[foodId] + 1 : 1,
       }));
     } catch (err) {
       console.log("Add error:", err.message);

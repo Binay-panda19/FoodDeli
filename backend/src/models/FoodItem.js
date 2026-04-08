@@ -30,14 +30,13 @@ const foodItemSchema = new mongoose.Schema(
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
-      required: [true, "Restaurant is required"],
     },
     isAvailable: {
       type: Boolean,
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // ── Indexes ──────────────────────────────────────────────
