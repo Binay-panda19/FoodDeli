@@ -1,19 +1,19 @@
-import { useContext } from "react";
+import { useCart } from "../../context/CartContext";
 import "./FoodItem.css";
 import { assets } from "../../assets/assets";
-import { StoreContext } from "../../context/StoreContext";
-import { getImage } from "../../utils/imageLoader";
 
 function FoodItem({ id, name, price, description, image }) {
-  const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
-  // console.log(image);
+  const { cartItems, addToCart, removeFromCart } = useCart();
+  // console.log(cartItems);
+
+  if (!cartItems) return null;
 
   return (
     <div className="food-item">
       <div className="food-item-img-container">
         <img className="food-item-image" src={assets[image]} alt={name} />
 
-        {!cartItems[id] ? (
+        {!cartItems?.[id] ? (
           <img
             className="add"
             onClick={() => addToCart(id)}

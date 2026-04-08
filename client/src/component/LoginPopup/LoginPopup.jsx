@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import API from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
 
 function LoginPopup({ setShowLogin, setUser }) {
   const [currState, setCurrState] = useState("Login");
+  const { login, register } = useAuth();
 
   const [data, setData] = useState({
     name: "",
@@ -24,29 +26,13 @@ function LoginPopup({ setShowLogin, setUser }) {
   // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    try {
-      if (currState === "Login") {
-        const res = await API.post("/auth/login", {
-          email: data.email,
-          password: data.password,
-        });
-        setUser(res.data);
-      } else {
-        const res = await API.post("/auth/register", {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-          address: data.address,
-          phone: data.phone,
-        });
-        setUser(res.data);
-      }
-
-      setShowLogin(false);
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+    if (currState === "Login") {
+      const success = await login(data.email, data.password);
+      if (success) setShowLogin(false);
+    } else {
+      const success = await register(data);
+      if (success) setShowLogin(false);
     }
   };
 

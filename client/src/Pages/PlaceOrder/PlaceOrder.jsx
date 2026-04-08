@@ -1,63 +1,109 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./PlaceOrder.css";
 import { StoreContext } from "../../context/StoreContext";
+import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import API from "../../api/axios";
+import { toast } from "react-toastify";
 
 function PlaceOrder() {
-  const { getTotalCartAmount } = useContext(StoreContext);
+  const { food_list } = useContext(StoreContext);
+  const { cartItems } = useCart();
+
   const navigate = useNavigate();
 
+  const [address, setAddress] = useState("");
+
+  const getTotalAmount = () => {
+    let total = 0;
+
+    food_list.forEach((item) => {
+      if (cartItems[item._id]) {
+        total += item.price * cartItems[item._id];
+      }
+    });
+
+    return total;
+  };
+
+  const handlePayment = async () => {
+    try {
+      const items = food_list
+        .filter((food) => cartItems[food._id] > 0)
+        .map((food) => ({
+          food: food._id,
+          name: food.name,
+          quantity: cartItems[food._id],
+          price: food.price,
+        }));
+
+      const totalAmount = getTotalAmount() + 2;
+
+      const res = await API.post("/orders/create", {
+        items,
+        totalAmount,
+        deliveryAddress: address,
+      });
+
+      const order = res.data.razorpayOrder;
+
+      const options = {
+        key: "rzp_test_Sb2jm8dxMJNPdl",
+        amount: order.amount,
+        currency: "INR",
+        name: "FoodDeli",
+        description: "Food Order Payment",
+        order_id: order.id,
+
+        handler: async function (response) {
+          await API.post("/orders/verify", {
+            ...response,
+            items,
+            totalAmount,
+            deliveryAddress: address,
+          });
+
+          toast.success("Payment Successful");
+
+          navigate("/");
+        },
+
+        theme: {
+          color: "#ff6347",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.log(error);
+      toast.error("Payment failed");
+    }
+  };
+
   return (
-    <form action="" className="place-order">
+    <div className="place-order">
       <div className="place-order-left">
-        <p className="title">Delivery Information</p>
-        <div className="multi-fields">
-          <input type="text" placeholder="First Name" />
-          <input type="text" placeholder="Last Name" />
-        </div>
-        <input type="text" placeholder="Email address" />
-        <input type="text" placeholder="Street" />
-        <div className="multi-fields">
-          <input type="text" placeholder="City" />
-          <input type="text" placeholder="State" />
-        </div>
-        <div className="multi-fields">
-          <input type="text" placeholder="Zip Code" />
-          <input type="text" placeholder="Country" />
-        </div>
-        <input type="text" placeholder="Phone" />
+        <h2>Delivery Information</h2>
+
+        <textarea
+          placeholder="Enter delivery address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
       </div>
 
       <div className="place-order-right">
-        <div className="cart-total">
-          <h2>Cart Total</h2>
-          <div>
-            <div className="cart-total-details">
-              <p>Subtotal</p>
-              <p>{getTotalCartAmount()}</p>
-            </div>
+        <h2>Order Summary</h2>
 
-            <hr />
+        <p>Total Amount: ₹{getTotalAmount()}</p>
+        <p>Delivery Fee: ₹50</p>
 
-            <div className="cart-total-details">
-              <p>Delivery Fee</p>
-              <p>2</p>
-            </div>
+        <h3>Total: ₹{getTotalAmount() + 2}</h3>
 
-            <hr />
-
-            <div className="cart-total-details">
-              <b>Total</b>
-              <b>{getTotalCartAmount() + 2}</b>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" onClick={() => navigate("/order")}>
-          PROCEED TO PAYMENT
-        </button>
+        <button onClick={handlePayment}>PAY WITH RAZORPAY</button>
       </div>
-    </form>
+    </div>
   );
 }
 

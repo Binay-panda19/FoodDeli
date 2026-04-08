@@ -1,0 +1,54 @@
+.add-food-container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.add-food-container h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.add-food-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-food-form input,
+.add-food-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-food-form textarea {
+  min-height: 80px;
+  resize: none;
+}
+
+.add-food-form input:focus,
+.add-food-form textarea:focus {
+  outline: none;
+  border-color: #ff6347;
+}
+
+.add-food-btn {
+  background: #ff6347;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-food-btn:hover {
+  background: #e5533d;
+}

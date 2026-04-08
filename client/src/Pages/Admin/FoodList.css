@@ -1,0 +1,52 @@
+.foodlist-container {
+  padding: 30px;
+}
+
+.foodlist-container h2 {
+  margin-bottom: 20px;
+}
+
+.food-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.food-table thead {
+  background: #1f2937;
+  color: white;
+}
+
+.food-table th,
+.food-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.food-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.food-table tbody tr:hover {
+  background: #f3f4f6;
+}
+
+.delete-btn {
+  background: #ef4444;
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.food-display {
+  padding-bottom: 20px;
+}

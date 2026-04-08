@@ -3,15 +3,23 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
+
 import StoreContextProvider from "./context/StoreContext.jsx";
-import AuthContextProvider from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <StoreContextProvider>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
-    </StoreContextProvider>
+    <AuthProvider>
+      <CartProvider>
+        <StoreContextProvider>
+          <ToastContainer position="top-right" autoClose={3000} />
+          <App />
+        </StoreContextProvider>
+      </CartProvider>
+    </AuthProvider>
   </BrowserRouter>,
 );

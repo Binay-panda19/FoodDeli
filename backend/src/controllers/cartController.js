@@ -1,58 +1,55 @@
 import Cart from "../models/Cart.js";
 import FoodItem from "../models/FoodItem.js";
 
-// ✅ Get user cart
+// 🛒 Get User Cart
 export const getCart = async (req, res) => {
   try {
-    console.log("USER FROM PROTECT:", req.user);
-
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "User not authenticated",
-      });
-    }
-
     const cart = await Cart.findOne({ user: req.user._id }).populate(
       "items.food",
     );
 
     if (!cart) {
       return res.json({
+        success: true,
         items: [],
         totalPrice: 0,
       });
     }
 
-    res.json(cart);
+    res.json({
+      success: true,
+      items: cart.items,
+      totalPrice: cart.totalPrice,
+    });
   } catch (error) {
     console.error("GET CART ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// ✅ Add item to cart
+// ➕ Add Item To Cart
 export const addToCart = async (req, res) => {
-  console.log(req.body);
-  const { foodId, quantity } = req.body;
-
-  console.log("USER:", req.user);
-  console.log("BODY:", req.body);
-
   try {
-    if (!foodId || quantity <= 0) {
-      return res.status(400).json({ message: "Invalid input" });
+    const { foodId, quantity = 1 } = req.body;
+
+    if (!foodId) {
+      return res.status(400).json({
+        success: false,
+        message: "Food ID required",
+      });
     }
 
-    // 🔍 Find food by id
-    // const food = await FoodItem.findById(foodId);
-    const food = await FoodItem.findOne({ name: req.body.name });
+    // 🔍 find food by ID
+    const food = await FoodItem.findById(foodId);
 
     if (!food) {
-      return res.status(404).json({ message: "Food not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Food not found",
+      });
     }
 
-    // 🛒 Find or create cart
+    // 🛒 find or create cart
     let cart = await Cart.findOne({ user: req.user._id });
 
     if (!cart) {
@@ -62,13 +59,13 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // 🔁 Check if item already exists
-    const itemIndex = cart.items.findIndex(
+    // 🔁 check if food already exists
+    const existingItem = cart.items.find(
       (item) => item.food.toString() === foodId,
     );
 
-    if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
+    if (existingItem) {
+      existingItem.quantity += quantity;
     } else {
       cart.items.push({
         food: food._id,
@@ -77,40 +74,56 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // 💰 Recalculate total
+    // 💰 recalc total
     cart.calcTotalPrice();
 
     await cart.save();
 
-    res.status(200).json({
+    const updatedCart = await Cart.findOne({ user: req.user._id }).populate(
+      "items.food",
+    );
+
+    res.json({
       success: true,
       message: "Item added to cart",
-      cart,
+      cart: updatedCart,
     });
   } catch (error) {
-    console.error(error);
+    console.error("ADD CART ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// ✅ Remove item
+// ❌ Remove Item
 export const removeFromCart = async (req, res) => {
-  const { foodId } = req.body;
-
   try {
-    let cart = await Cart.findOne({ user: req.user._id });
+    const { foodId } = req.body;
 
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    const cart = await Cart.findOne({ user: req.user._id });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
 
     cart.items = cart.items.filter((item) => item.food.toString() !== foodId);
 
-    // 🔥 recalculate total
     cart.calcTotalPrice();
 
     await cart.save();
 
-    res.json(cart);
+    const updatedCart = await Cart.findOne({ user: req.user._id }).populate(
+      "items.food",
+    );
+
+    res.json({
+      success: true,
+      cart: updatedCart,
+    });
   } catch (error) {
+    console.error("REMOVE CART ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };

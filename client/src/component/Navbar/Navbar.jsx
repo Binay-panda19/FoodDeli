@@ -3,22 +3,14 @@ import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
-import API from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../Context/CartContext";
 
-const Navbar = ({ setShowLogin, user, setUser }) => {
+const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
 
-  const { getTotalCartAmount } = useContext(StoreContext);
-
-  // 🔐 Logout handler
-  const handleLogout = async () => {
-    try {
-      await API.post("/auth/logout");
-      setUser(null);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { getTotalItems } = useCart();
+  const { user, logout } = useAuth();
 
   return (
     <div className="navbar">
@@ -34,6 +26,7 @@ const Navbar = ({ setShowLogin, user, setUser }) => {
         >
           Home
         </Link>
+
         <a
           href="#explore-menu"
           className={menu === "menu" ? "active" : ""}
@@ -41,6 +34,7 @@ const Navbar = ({ setShowLogin, user, setUser }) => {
         >
           Menu
         </a>
+
         <a
           href="#app-download"
           className={menu === "mobile-app" ? "active" : ""}
@@ -48,6 +42,7 @@ const Navbar = ({ setShowLogin, user, setUser }) => {
         >
           Mobile App
         </a>
+
         <a
           href="#footer"
           className={menu === "contact-us" ? "active" : ""}
@@ -57,6 +52,14 @@ const Navbar = ({ setShowLogin, user, setUser }) => {
         </a>
       </ul>
 
+      <Link
+        to="/admin"
+        className={menu === "home" ? "active" : ""}
+        onClick={() => setMenu("home")}
+      >
+        Admin Dashboard
+      </Link>
+
       <div className="navbar-right">
         <img src={assets.search_icon} alt="search" />
 
@@ -64,16 +67,15 @@ const Navbar = ({ setShowLogin, user, setUser }) => {
           <Link to="/cart">
             <img src={assets.basket_icon} alt="basket" />
           </Link>
-          <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
+          <div className={getTotalItems() === 0 ? "" : "dot"}></div>
         </div>
 
-        {/* 🔥 AUTH UI */}
         {!user ? (
           <button onClick={() => setShowLogin(true)}>Sign In</button>
         ) : (
           <div className="navbar-user">
             <p>{user.name}</p>
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={logout}>Logout</button>
           </div>
         )}
       </div>

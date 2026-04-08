@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: {
-        values: ["customer", "owner", "admin"],
+        values: ["customer", "admin"],
         message: "{VALUE} is not a valid role",
       },
       default: "customer",
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // ── Indexes ──────────────────────────────────────────────

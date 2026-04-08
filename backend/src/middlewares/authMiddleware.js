@@ -6,7 +6,7 @@ import User from "../models/User.js";
  * Reads JWT from cookies, verifies it, and attaches user to req.user.
  */
 export const protect = async (req, res, next) => {
-  console.log("COOKIES:", req.cookies);
+  // console.log("COOKIES:", req.cookies);
 
   const token = req.cookies?.token;
 
@@ -18,7 +18,7 @@ export const protect = async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  console.log("DECODED:", decoded);
+  // console.log("DECODED:", decoded);
 
   const user = await User.findById(decoded.id).select("-password");
 
@@ -28,7 +28,9 @@ export const protect = async (req, res, next) => {
       message: "User not found for this token",
     });
   }
+
   req.user = user;
+
   next();
 };
 
