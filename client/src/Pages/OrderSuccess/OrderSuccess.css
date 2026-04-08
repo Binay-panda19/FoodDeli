@@ -1,0 +1,58 @@
+.order-success {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+}
+
+.success-icon {
+  width: 70px;
+  height: 70px;
+  background: #22c55e;
+  color: white;
+  border-radius: 50%;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.order-card h2 {
+  margin-bottom: 10px;
+}
+
+.order-card p {
+  color: #666;
+}
+
+.eta {
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.order-card button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #ff6347;
+  color: white;
+  cursor: pointer;
+}
+
+.order-card button.secondary {
+  background: #e5e7eb;
+  color: #333;
+}

@@ -13,6 +13,7 @@ import FoodList from "./Pages/Admin/FoodList";
 import Orders from "./Pages/Admin/Orders";
 import AdminRoute from "./component/AdminRoute";
 import AdminLayout from "../src/Layout/AdminLayout.jsx";
+import OrderSuccess from "./Pages//OrderSuccess/OrderSucces.jsx";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -44,6 +45,8 @@ function App() {
             </Route>
 
             <Route path="/" element={<Home />} />
+
+            <Route path="/order-success" element={<OrderSuccess />} />
 
             {/* 🔒 Protected */}
             <Route

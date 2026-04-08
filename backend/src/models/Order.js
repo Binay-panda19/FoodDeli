@@ -22,7 +22,7 @@ const orderItemSchema = new mongoose.Schema(
       min: [0, "Price cannot be negative"],
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const orderSchema = new mongoose.Schema(
@@ -35,7 +35,6 @@ const orderSchema = new mongoose.Schema(
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
-      required: [true, "Restaurant is required"],
     },
     items: {
       type: [orderItemSchema],
@@ -51,7 +50,6 @@ const orderSchema = new mongoose.Schema(
     },
     deliveryAddress: {
       type: String,
-      required: [true, "Delivery address is required"],
       trim: true,
     },
     status: {
@@ -71,7 +69,7 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // ── Indexes ──────────────────────────────────────────────

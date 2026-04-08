@@ -55,6 +55,13 @@ function PlaceOrder() {
         description: "Food Order Payment",
         order_id: order.id,
 
+        method: {
+          upi: true,
+          card: true,
+          netbanking: true,
+          wallet: true,
+        },
+
         handler: async function (response) {
           await API.post("/orders/verify", {
             ...response,
@@ -65,7 +72,7 @@ function PlaceOrder() {
 
           toast.success("Payment Successful");
 
-          navigate("/");
+          navigate("/order-success");
         },
 
         theme: {
@@ -74,6 +81,12 @@ function PlaceOrder() {
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function (response) {
+        toast.error("Payment failed");
+
+        console.log(response.error);
+      });
+
       rzp.open();
     } catch (error) {
       console.log(error);

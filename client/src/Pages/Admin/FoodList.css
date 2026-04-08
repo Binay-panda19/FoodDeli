@@ -2,8 +2,9 @@
   padding: 30px;
 }
 
-.foodlist-container h2 {
-  margin-bottom: 20px;
+.foodlist-container {
+  padding: 30px;
+  padding-bottom: 80px;
 }
 
 .food-table {

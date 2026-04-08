@@ -2,9 +2,8 @@ import React, { useContext, useState } from "react";
 import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { StoreContext } from "../../context/StoreContext";
 import { useAuth } from "../../context/AuthContext";
-import { useCart } from "../../Context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
@@ -52,13 +51,11 @@ const Navbar = ({ setShowLogin }) => {
         </a>
       </ul>
 
-      <Link
-        to="/admin"
-        className={menu === "home" ? "active" : ""}
-        onClick={() => setMenu("home")}
-      >
-        Admin Dashboard
-      </Link>
+      {user?.name === "Admin" && (
+        <Link to="/admin" onClick={() => setMenu("Admin")}>
+          Admin Dashboard
+        </Link>
+      )}
 
       <div className="navbar-right">
         <img src={assets.search_icon} alt="search" />
